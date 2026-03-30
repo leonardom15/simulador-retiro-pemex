@@ -378,8 +378,8 @@ footer{text-align:center;font-size:11px;color:var(--dim);
           onclick="(function(){
             const v = document.getElementById('pwdInput').value;
             const h = simpleHash(v);
-            // La clave es: STPRM473951
-            if(h === simpleHash('STPRM473951')){
+            // La clave es: STPRM47
+            if(h === simpleHash('STPRM47')){
               sessionStorage.setItem('sim_auth','ok');
               document.getElementById('authOverlay').remove();
             } else {
