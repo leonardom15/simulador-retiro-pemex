@@ -330,79 +330,104 @@ footer{text-align:center;font-size:11px;color:var(--dim);
 </head>
 <script>
 (function(){
-  const HASH = '9b3c6b1e2f4a8d5e7c0f1a2b3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2';
-  // Simple hash function (not cryptographic, just obfuscation)
   function simpleHash(str){
     let h = 0;
     for(let i=0;i<str.length;i++){
       const c = str.charCodeAt(i);
-      h = ((h<<5)-h)+c; h|=0;
+      h = ((h<<5)-h)+c;
+      h|=0;
     }
     return Math.abs(h).toString(16).padStart(8,'0');
   }
-  const stored = sessionStorage.getItem('sim_auth');
-  if(stored === 'ok') return; // ya autenticado en esta sesión
-  // Mostrar pantalla de login
+
+  if(sessionStorage.getItem('sim_auth') === 'ok') return;
+
   document.addEventListener('DOMContentLoaded', function(){
+
     const overlay = document.createElement('div');
     overlay.id = 'authOverlay';
-    overlay.style.cssText = [
-      'position:fixed','top:0','left:0','width:100vw','height:100vh',
-      'background:#0d1117','display:flex','align-items:center','justify-content:center',
-      'z-index:999999','flex-direction:column','gap:16px'
-    ].join(';');
+    overlay.style.cssText = `
+      position:fixed;
+      top:0;
+      left:0;
+      width:100vw;
+      height:100vh;
+      background:#0d1117;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-direction:column;
+      gap:16px;
+      z-index:999999;
+    `;
+
     overlay.innerHTML = `
       <div style="text-align:center;margin-bottom:8px">
-        <div style="font-size:22px;font-weight:900;color:#3fb950;font-family:Arial,sans-serif">
+        <div style="font-size:22px;font-weight:900;color:#3fb950">
           Simulador de Retiro PEMEX · STPRM
         </div>
-        <div style="font-size:12px;color:#8b949e;margin-top:6px;font-family:Arial,sans-serif">
+        <div style="font-size:12px;color:#8b949e;margin-top:6px">
           Herramienta de análisis · Uso interno
         </div>
       </div>
+
       <div style="background:#161b22;border:1px solid #30363d;border-radius:12px;
                   padding:28px 32px;display:flex;flex-direction:column;gap:14px;
                   min-width:300px;text-align:center">
-        <div style="font-size:13px;color:#e6edf3;font-family:Arial,sans-serif;font-weight:600">
+
+        <div style="font-size:13px;color:#e6edf3;font-weight:600">
           Ingresa la clave de acceso
         </div>
+
         <input id="pwdInput" type="password" placeholder="••••••••"
           style="border:1px solid #30363d;border-radius:8px;background:#21262d;
                  color:#e6edf3;padding:10px 14px;font-size:15px;outline:none;
-                 text-align:center;font-family:Arial,sans-serif;width:100%"
-          onkeydown="if(event.key==='Enter') document.getElementById('pwdBtn').click()">
+                 text-align:center;width:100%">
+
         <button id="pwdBtn"
           style="background:#238636;color:#fff;border:none;border-radius:8px;
-                 padding:10px;font-size:14px;font-weight:700;cursor:pointer;
-                 font-family:Arial,sans-serif;width:100%"
-          onclick="(function(){
-            const v = document.getElementById('pwdInput').value;
-            const h = simpleHash(v);
-            // La clave es: STPRM47
-            if(h === simpleHash('STPRM47')){
-              sessionStorage.setItem('sim_auth','ok');
-              document.getElementById('authOverlay').remove();
-            } else {
-              document.getElementById('pwdErr').style.display='block';
-              document.getElementById('pwdInput').value='';
-              document.getElementById('pwdInput').focus();
-            }
-          })()">
+                 padding:10px;font-size:14px;font-weight:700;cursor:pointer;width:100%">
           Acceder
         </button>
-        <div id="pwdErr" style="display:none;font-size:11px;color:#f85149;
-             font-family:Arial,sans-serif">
+
+        <div id="pwdErr" style="display:none;font-size:11px;color:#f85149">
           Clave incorrecta. Intenta de nuevo.
         </div>
       </div>
-      <div style="font-size:10px;color:#6e7681;font-family:Arial,sans-serif">
-        Anexo 16 CCT · Arts. 3 y 4 · Análisis de aportaciones omitidas
+
+      <div style="font-size:10px;color:#6e7681">
+        Anexo 16 CCT · Arts. 3 y 4 · Aportaciones omitidas
       </div>
     `;
+
     document.body.appendChild(overlay);
-    document.getElementById('pwdInput').focus();
+
+    const input = document.getElementById('pwdInput');
+    const btn = document.getElementById('pwdBtn');
+    const err = document.getElementById('pwdErr');
+
+    function validarLogin(){
+      const v = input.value.trim();
+
+      if(simpleHash(v) === simpleHash('STPRM47')){
+        sessionStorage.setItem('sim_auth','ok');
+        overlay.remove();
+      } else {
+        err.style.display = 'block';
+        input.value = '';
+        input.focus();
+      }
+    }
+
+    btn.addEventListener('click', validarLogin);
+    input.addEventListener('keydown', e => {
+      if(e.key === 'Enter') validarLogin();
+    });
+
+    input.focus();
   });
 })();
+</script>
 </script>
 
 <body>
