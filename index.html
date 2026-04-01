@@ -584,14 +584,6 @@ footer{text-align:center;font-size:11px;color:var(--dim);
           font-family:inherit;width:100%;text-align:left">
           🗂 Ver guía visual — ¿de dónde saco cada dato?
         </button>
-        <script>
-          document.getElementById("tirillaBtnToggle").addEventListener("click", function(){
-            var d = this.nextElementSibling;
-            var open = d.style.display !== "none";
-            d.style.display = open ? "none" : "block";
-            this.textContent = open ? "🗂 Ver guía visual — ¿de dónde saco cada dato?" : "🗂 Ocultar guía visual";
-          });
-        </script>
         <div style="display:none;margin-top:10px">
           <div style="font-size:11px;color:var(--mut);margin-bottom:8px;font-style:italic">
             Formato original PEMEX (datos ficticios) · Las flechas indican de dónde extraer cada campo
